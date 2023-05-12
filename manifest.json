@@ -13,12 +13,15 @@
   "action": {
     "default_popup": "popup.html"
   },
+  
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
       "exclude_matches": ["file:///*/*"],
+      "exclude_globs": ["*chrome://extensions/*"],
       "js": ["content.js", "assets/js/simple-editor-purejs.js"],
-      "css": ["assets/style.css"]
+      "css": ["assets/style.css"],
+      "match_origin_as_fallback": true
     }
   ],
   "content_security_policy": {
@@ -27,6 +30,7 @@
   "offline_enabled": false,
   "host_permissions": ["https://*/*", "http://*/*", "<all_urls>"],
   "permissions": [
+    "scripting",
     "notifications",
     "alarms",
     "tabs",

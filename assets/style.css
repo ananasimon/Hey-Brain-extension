@@ -1,33 +1,85 @@
 /*
 ! tailwindcss v3.0.24 | MIT License | https://tailwindcss.com
 */
+
+  @font-face {
+    font-family: 'Montserrat';
+    src: url(chrome-extension://__MSG_@@extension_id__/assets/font/montserrat-regular-webfont.woff2) format('woff2'),
+         url(chrome-extension://__MSG_@@extension_id__/assets/font/montserrat-regular-webfont.woff) format('woff');
+    font-style: normal;
+    font-weight: 400;
+    }
+
+  @font-face {
+    font-family: 'Montserrat';
+    src: url(chrome-extension://__MSG_@@extension_id__/assets/font/montserrat-semibold-webfont.woff2) format('woff2'),
+         url(chrome-extension://__MSG_@@extension_id__/assets/font/montserrat-semibold-webfont.woff) format('woff');
+    font-style: normal;
+    font-weight: 600;
+  }
+
+  .hey-brain-main div::selection {
+    background: #008CFF; 
+  }
+ 
+ body {
+  font-family: 'Montserrat', sans-serif;
+ }
+
+#hey-brain-root,
+#hey-brain-content-smartpast-content,
+#test {
+  
+  font-family: 'Montserrat', sans-serif;
+  /* font-weight: 600; */
+  /*  font-family:  url('chrome-extension://__MSG_@@extension_id__/assets/font/Montserrat-Regular.ttf') format('ttf'); */
+
+}
+
 .hey-brain-main,
-:after,
-:before {
+.hey-brain-main :after,
+.hey-brain-main :before {
+  font-family:'Montserrat', sans-serif ;
   border: 0 solid #e5e7eb;
   box-sizing: border-box;
   --tw-content: "";
 }
 .hey-brain-main {
   -webkit-text-size-adjust: 100%;
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+  /* font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
     Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif,
-    Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
-  line-height: 1.5;
+    Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji; */
+  font-family:'Montserrat', sans-serif ;
   tab-size: 4;
   transition: 500ms;
-  line-height: inherit;
-  margin: 0; line-height: inherit;
   margin: 0;
+  margin: 0;
+  /* added 2023-03-21 */
+  font-size: 16px;  
+  line-height: normal;
+}
+ 
+ /* added 2023-03-21 */
+.hey-brain-main p {
+  font-size: 1em;
+  font-weight: normal;
+  line-height: normal;
 }
 
 .hey-brain-main a {
   color: inherit;
   text-decoration: inherit;
 }
-.hey-brain-main b{
+
+.hey-brain-main a#taglink {
+  color: #2B007B;
+  font-family:'Montserrat', sans-serif ;
+}
+.hey-brain-main b {
   font-weight: bolder;
-}                                               
+}
+
+
 
 .hey-brain-main button,
 .hey-brain-main input {
@@ -45,7 +97,7 @@
 [type="reset"],
 [type="submit"],
 .hey-brain-main button {
-  -webkit-appearance: button;
+  /* -webkit-appearance: button; 30.04*/
   background-color: transparent;
   background-image: none;
 }
@@ -58,24 +110,23 @@
 .hey-brain-main progress {
   vertical-align: baseline;
 }
-::-webkit-inner-spin-button,
-::-webkit-outer-spin-button {
+.hey-brain-main ::-webkit-inner-spin-button,
+.hey-brain-main ::-webkit-outer-spin-button {
   height: auto;
 }
 [type="search"] {
   -webkit-appearance: textfield;
   outline-offset: -2px;
 }
-::-webkit-search-decoration {
+.hey-brain-main ::-webkit-search-decoration {
   -webkit-appearance: none;
 }
-::-webkit-file-upload-button {
+.hey-brain-main ::-webkit-file-upload-button {
   -webkit-appearance: button;
   font: inherit;
 }
 
-.hey-brain-main p
-{
+.hey-brain-main p {
   margin: 0;
 }
 .hey-brain-main ol,
@@ -93,7 +144,7 @@
   color: #9ca3af;
   opacity: 1;
 }
-.hey-brain-main input::placeholder{
+.hey-brain-main input::placeholder {
   color: #9ca3af;
   opacity: 1;
 }
@@ -117,8 +168,8 @@
   display: none;
 }
 *,
-:after,
-:before {
+.hey-brain-main :after,
+.hey-brain-main :before {
   --tw-translate-x: 0;
   --tw-translate-y: 0;
   --tw-rotate: 0;
@@ -163,21 +214,20 @@
   --tw-backdrop-sepia: ;
 }
 
-
-
 .hey-brain-main .m-2 {
-  margin: 0.5rem;
+  margin: 0.5em;
 }
 
 .hey-brain-main .mr-1 {
-  margin-right: 0.25rem;
+  margin-right: 0.25em;
 }
 
 .hey-brain-main .mb-1 {
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.25em;
 }
 
-.hey-brain-main .flex {
+/* Modified 2023-03-22 */
+.hey-brain-main .brain-flex {
   display: flex;
 }
 
@@ -188,19 +238,32 @@
   height: 100%;
 }
 .hey-brain-main .h-12 {
-  height: 3rem;
+  height: 3em;
 }
 .hey-brain-main .w-full {
   width: 100%;
 }
 .hey-brain-main .w-12 {
-  width: 3rem;
+  width: 3em;
 }
 
-.hey-brain-main .shrink-0 {
+/* Modified 2023-03-22 */
+.hey-brain-main .brain-flex-shrink-0 {
   flex-shrink: 0;
 }
-.hey-brain-main .flex-grow,
+
+.hey-brain-main .brain-flex-shrink-0 img {
+  width: 16px;
+  height: 16px;
+}
+
+.hey-brain-main .input-clear img {
+  width: 24px;
+  height: 24px;
+  background-color: white;
+}
+/* Modified 2023-03-22 */
+.hey-brain-main .brain-flex-grow,
 .hey-brain-main .grow {
   flex-grow: 1;
 }
@@ -222,13 +285,18 @@
   cursor: pointer;
 }
 
-.hey-brain-main .flex-row {
+/* Modified 2023-03-22 */
+.hey-brain-main .brain-flex-row {
   flex-direction: row;
 }
-.hey-brain-main .flex-col {
+
+/* Modified 2023-03-22 */
+.hey-brain-main .brain-flex-col {
   flex-direction: column;
 }
-.hey-brain-main .flex-wrap {
+
+/* Modified 2023-03-22 */
+.hey-brain-main .brain-flex-wrap {
   flex-wrap: wrap;
 }
 .hey-brain-main .items-start {
@@ -243,36 +311,36 @@
 
 .hey-brain-main .space-x-2 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0;
-  margin-left: calc(0.5rem * (1 - var(--tw-space-x-reverse)));
-  margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.5em * (1 - var(--tw-space-x-reverse)));
+  margin-right: calc(0.5em * var(--tw-space-x-reverse));
 }
 .hey-brain-main .space-x-1 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0;
-  margin-left: calc(0.25rem * (1 - var(--tw-space-x-reverse)));
-  margin-right: calc(0.25rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.25em * (1 - var(--tw-space-x-reverse)));
+  margin-right: calc(0.25em * var(--tw-space-x-reverse));
 }
 .hey-brain-main .space-y-4 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-y-reverse: 0;
-  margin-bottom: calc(1rem * var(--tw-space-y-reverse));
-  margin-top: calc(1rem * (1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(1em * var(--tw-space-y-reverse));
+  margin-top: calc(1em * (1 - var(--tw-space-y-reverse)));
 }
 .hey-brain-main .space-y-2 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-y-reverse: 0;
-  margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
-  margin-top: calc(0.5rem * (1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.5em * var(--tw-space-y-reverse));
+  margin-top: calc(0.5em * (1 - var(--tw-space-y-reverse)));
 }
 
 .hey-brain-main .rounded-md {
-  border-radius: 0.375rem;
+  border-radius: 0.375em;
 }
 .hey-brain-main .rounded-full {
-  border-radius: 9999px;
+  border-radius: 26px;
 }
 .hey-brain-main .rounded {
-  border-radius: 0.25rem;
+  border-radius: 0.25em;
 }
 .hey-brain-main .rounded-lg {
-  border-radius: 0.5rem;
+  border-radius: 0.5em;
 }
 
 .hey-brain-main .border {
@@ -314,37 +382,37 @@
 }
 
 .hey-brain-main .p-2 {
-  padding: 0.5rem;
+  padding: 0.5em;
 }
 .hey-brain-main .p-4 {
-  padding: 1rem;
+  padding: 1em;
 }
 .hey-brain-main .px-5 {
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
+  padding-left: 1.25em;
+  padding-right: 1.25em;
 }
 .hey-brain-main .py-2 {
-  padding-bottom: 0.5rem;
-  padding-top: 0.5rem;
+  padding-bottom: 0.5em;
+  padding-top: 0.5em;
 }
 
 .hey-brain-main .py-1 {
-  padding-bottom: 0.25rem;
-  padding-top: 0.25rem;
+  padding-bottom: 0.25em;
+  padding-top: 0.25em;
 }
 .hey-brain-main .px-4 {
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: 1em;
+  padding-right: 1em;
 }
 
 .hey-brain-main .px-2 {
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
 }
 
 .hey-brain-main .px-6 {
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
+  padding-left: 1.5em;
+  padding-right: 1.5em;
 }
 
 .hey-brain-main .text-center {
@@ -352,17 +420,17 @@
 }
 
 .hey-brain-main .text-sm {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
+  font-size: 0.875em;
+  line-height: 1.25em;
 }
 .hey-brain-main .text-xs {
-  font-size: 0.75rem;
-  line-height: 1rem;
+  font-size: 0.75em;
+  line-height: 1em;
 }
 
 .hey-brain-main .text-base {
-  font-size: 1rem;
-  line-height: 1.5rem;
+  font-size: 1em;
+  line-height: 1.5em;
 }
 
 .hey-brain-main .font-semibold {
@@ -435,7 +503,7 @@
   font-family: Montserrat, sans-serif;
 } */
 .hey-brain-main {
-  font-family: Montserrat, sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .hey-brain-main .hover\:bg-purple:hover {
@@ -468,8 +536,6 @@
   --tw-bg-opacity: 1;
   background-color: rgb(43 0 123 / var(--tw-bg-opacity));
 }
-
-
 
 @-webkit-keyframes rotating {
   0% {
@@ -532,17 +598,25 @@
   }
 }
 
-/* NATALIA code starts here-->--> */
 .hey-brain-main .logo-switch {
   width: 100%;
   display: grid;
-  grid-template-areas: ". . brain toggle"
+  grid-template-areas: ". . brain toggle";
+  margin-bottom: 2px;
 }
-.hey-brain-main #brainImg {
-    grid-area: brain;
-    justify-self:center;
+.hey-brain-main #brainImg,
+.hey-brain-main #brain-img-snooze
+
+{
+  position: absolute; 
+  left:115px;
+   top:12px;
+  width: 64px;
+  height: 64px;
 }
+
 .hey-brain-main .switch {
+ 
   position: relative;
   display: inline-block;
   width: 34px;
@@ -555,7 +629,16 @@
   opacity: 0;
   width: 0;
   height: 0;
+  position: relative;
 }
+.hey-brain-main .timer {
+  color: red;
+  font-weight: bold;
+  position: absolute;
+  top: 20px;
+  left: 2px;
+}
+
 /* non active input*/
 .hey-brain-main .slider {
   position: absolute;
@@ -580,15 +663,16 @@
   border-radius: 50%;
 }
 /* active input*/
-.hey-brain-main input:checked +  .slider {
-  background-color: #DCD0FC;
+.hey-brain-main input:checked + .slider {
+  background-color: #dcd0fc;
 }
 /*  circle in active input*/
 .hey-brain-main input:checked + .slider:before {
-  background-color: #8962F4;
+  background-color: #8962f4;
 }
+
 /* for movement*/
-.hey-brain-main input:checked +  .slider:before {
+.hey-brain-main input:checked + .slider:before {
   -webkit-transform: translateX(16px);
   -ms-transform: translateX(16px);
   transform: translateX(16px);
@@ -597,4 +681,418 @@
 .hey-brain-main .slider.round {
   border-radius: 34px;
 }
-/* -- NATALIA code ends here-->--
+
+.hey-brain-main .popup-flex {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+
+  /* border: 1px solid orange; */
+}
+
+.hey-brain-main #go-to-heybrain {
+  color: white;
+  border: none;
+  width: 177px;
+  height: 36px;
+  padding: 10px 24px 10px 24px;
+  background-color: #6416f3;
+  border-radius: 100px;
+}
+
+.hey-brain-main #signed-in {
+  position: relative; 
+  height: 286px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+}
+
+.hey-brain-main .username p {
+  color: #718096;
+}
+
+.hey-brain-main #sign-out-button {
+  color: #8962f4;
+  cursor: pointer;
+}
+
+.hey-brain-main button#go-to-heybrain {
+  margin-bottom: 7px;
+ 
+}
+
+.hey-brain-main .sync-history_left,
+.hey-brain-main .block-the-page_left,
+.hey-brain-main .snooze_left {
+  display: flex;
+  gap: 10px;
+  margin-left: 25px;
+}
+
+.hey-brain-main #sync-content button,
+.hey-brain-main #snooze-content button {
+  padding: 10px 24px 10px 24px;
+  background-color: #6416f3;
+  border-radius: 10%;
+  margin: 20px;
+  color: white;
+}
+
+.hey-brain-main #sync-content button:hover {
+  transition: all 0.5s;
+  transform: scale(1.05);
+}
+
+div.sync-history.popup-flex:hover, 
+div.block-the-page.popup-flex:hover, 
+div.snooze.popup-flex:hover {
+  background-color: #F3F3FD;
+  cursor: pointer;
+}
+
+/*Added by Stanislav: BEGIN */
+
+.hey-brain-main .bg-red {
+  --tw-bg-opacity: 1;
+  background-color: rgb(240 22 22 / var(--tw-bg-opacity));
+}
+
+.hey-brain-main .bg-red-darker {
+  --tw-bg-opacity: 1;
+  background-color: rgb(190 0 0 / var(--tw-bg-opacity));
+}
+
+/* 2023-03-20 added*/
+.hey-brain-main #blocked-brain {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  left: 115px;
+  top: 12px;
+}
+
+
+.hey-brain-main #delpage-button, .hey-brain-main #deldom-button {
+  /* display: flex; */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 24px;
+  gap: 10px;
+
+  position: absolute;
+  width: 177px;
+  height: 36px;
+  left: 59px;
+  top: 166px;
+
+  background: #27B358;
+  border-radius: 100px;
+}
+
+
+.hey-brain-main #page-is-blocked, .hey-brain-main #domain-is-blocked {
+  position: absolute;
+  width: 201px;
+  height: 21px;
+  left: 46px;
+  top: 121px;
+
+  font-family: 'Montserrat', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 130%;
+  /* identical to box height, or 21px */
+
+  /* display: flex; */
+  align-items: center;
+  text-align: center;
+  letter-spacing: 0.25px;
+  text-transform: uppercase;
+
+  color: #FF706C;
+}
+
+.hey-brain-main #domain-is-blocked {
+  top: 101px;
+}
+
+.hey-brain-main #adddom-button {
+
+  position: absolute;
+  width: 185px;
+  height: 15px;
+  left: 55px;
+  top: 226px;
+
+  font-family: 'Montserrat', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 15px;
+
+  text-align: center;
+  cursor: pointer;
+  color: #FF706C;
+}
+
+.hey-brain-main #adddom-button:hover{
+  text-decoration: underline;
+}
+
+.hey-brain-main .hidden {
+  display: none;
+}
+
+.hey-brain-main #sign-out-button-2 {
+  color: #8962f4;
+  cursor: pointer;
+}
+
+
+/* 2023-03-20 added END*/
+
+/* 2023-03-21..22 added */
+
+.hey-brain-main .text-xs-popup {
+  font-size: 1em;
+  /* line-height: 1.15em; 30.04 */
+}
+
+.hey-brain-main p {
+  font-size: 1em;
+  line-height: 1.15em;
+}
+
+.hey-brain-main #sign-up, .hey-brain-main #sign-in{
+  /* position: relative;  */
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+}
+
+.hey-brain-main #sign-up{
+  height: 354px;
+}
+
+.hey-brain-main #sign-in{
+  height: 266px;
+}
+
+.hey-brain-main #heybrain-blocked{
+  height: 324px;
+  font-size: 12px;
+}
+
+
+
+.hey-brain-main .margtop-4 {
+  margin-top: 16px;
+}
+
+.hey-brain-main .margbtm-4 {
+  margin-bottom: 16px;
+}
+
+/* COPIES OF OLD FLEX */
+
+.hey-brain-main .flex {
+  display: flex;
+}
+
+.hey-brain-main .shrink-0 {
+  flex-shrink: 0;
+}
+
+.hey-brain-main .flex-grow,
+.hey-brain-main .grow {
+  flex-grow: 1;
+}
+
+.hey-brain-main .flex-row {
+  flex-direction: row;
+}
+
+.hey-brain-main .flex-col {
+  flex-direction: column;
+}
+
+.hey-brain-main .flex-wrap {
+  flex-wrap: wrap;
+}
+
+/* 2023-03-21..22 added END*/
+
+/* Added by Stanislav: END */
+
+/*  Added by NASTYA 03.04:  */
+
+.hey-brain-main #dialogoverlay {
+  z-index: 1000;
+}
+.hey-brain-main #dialogbox {
+ top: 0;
+ left: 0;
+ padding: 2vmin;
+ position: absolute;
+ height: 100%;
+ width: 100%;
+ background:#FFF;
+ border-radius: 1%;
+ filter: drop-shadow(0.5vmin 0.5vmin 0.5vmin rgb(31, 67, 125) );
+ font-family: 'Montserrat', sans-serif;
+ text-align: center;
+
+}
+
+.hey-brain-main #dialogboxhead {
+  margin-top: 20vmin;
+}
+.hey-brain-main #dialogboxbody {
+  font-size: 1em;
+  font-weight: normal;
+  line-height: 1.15em;
+}
+
+.hey-brain-main .centered {
+  display: flex;
+  justify-content: center;
+}
+
+.hey-brain-main #dialogboxfoot {
+  
+  /* position: relative; */
+  text-transform: uppercase;
+  color: #fff;
+  background-color: #6416f3;
+  border: none;
+  border-radius: 10%;
+  font-size: 12px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 550;
+  cursor: pointer;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5); 
+  padding: 10px 24px 10px 24px; 
+}
+
+.hey-brain-main #dialogboxfoot:hover {
+  box-shadow: 0 0 #0000, 0 0 #0000, 0 0 #0000;
+  transition: all 0.5s;
+  transform: scale(1.05);
+}
+
+.hey-brain-main #dialogboxfoot:active {
+  background-color: rgb(43 0 123);
+}
+
+/*  Added by NASTYA 03.04: END */
+
+/*  Added by NATALIA 25.03:  */
+
+#snooze-content {
+  z-index: 999999;
+  flex-direction: column;
+  position: absolute;
+  background: white;
+  align-items: center;
+  /* justify-content: center; */
+  bottom: 0px;
+  right: 0px;
+  width: 100%;
+  height: 100%;
+}
+
+
+/*  Added by NATALIA 25.03: END */
+
+/* Nastya is fixing the style for the notes 02.05 */
+.hey-brain-main .save-button {
+  background-color: #2B007B;
+  color: white;
+  border:none;
+  width: 80px;
+}
+.hey-brain-main .save-button:hover{
+  background-color: #E7E8FC;
+  color: #2B007B;
+  box-shadow: 0 0 #0000, 0 0 #0000, 0 0 #0000;
+  transition: 300ms;
+  /* transform: translate(0, 0.05em); */
+  border: none;
+}
+
+.hey-brain-main .tag-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  padding: 0px 10px;
+  bottom:0; 
+  background-color: white;
+  border: 1px solid #F1F1F1; 
+  position: absolute; 
+  width: 100%;
+  align-items: center; 
+  bottom:0; 
+  border-radius: 24px; 
+  border: 1px solid #F1F1F1; 
+  margin-top: 0vmin; 
+  width: 100%;
+}
+
+.hey-brain-main .hyb-nt-btn {
+  padding: 5px 7px; 
+  border: none;
+}
+
+.hey-brain-main .text{
+  /* position: relative; */
+  margin-top: 10px;
+  height: 90%; 
+  outline: none; 
+  padding: 2.5vmin;
+
+  overflow: scroll;
+}
+/* Nastya finished fixing 02.05 */
+
+
+.hey-brain-main ::-webkit-scrollbar {
+  width: 6px;
+}
+
+.hey-brain-main ::-webkit-scrollbar-track {
+  background-color: #FFFFFF;
+}
+
+.hey-brain-main ::-webkit-scrollbar-thumb {
+  background-color: #E4E4E4;
+  border-radius: 6px;
+  width: 6px;
+  height: 10px;
+}
+
+/* NEW by STANISLAV 2024-05-03 */
+.hey-brain-main .text ul, .hey-brain-main .text li {
+  list-style-type: disc;
+  padding-left: 8px;
+  margin-left: 8px;
+}
+
+.hey-brain-main .text h1 {
+  font-size: 2rem;
+  margin-block-start: 0.67em;
+  margin-block-end: 0.67em;
+}
+
+.hey-brain-main .text h2 {
+  font-size: 1.5rem;
+  margin-block-start: 0.67em;
+  margin-block-end: 0.67em;
+}
+
+.brain-flex .brain-flex-grow .fields,
+.brain-flex .brain-flex-grow .fields,
+.hey-brain-content-notes-content
+{
+  overflow: hidden;
+}

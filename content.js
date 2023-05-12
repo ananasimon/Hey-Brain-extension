@@ -4,12 +4,11 @@ const elBrainRootID = "hey-brain-root";
 const elBrainRootTabsID = "hey-brain-root-tabs";
 const elBrainContentID = "hey-brain-content";
 const elBrainLoaderID = "hey-brain-loader";
-const kBrainRootHeight = 475;
+const kBrainRootHeight = 582; 
 const tabFirstItemID = "hey-brain-root-tab-item-first";
 const tabSecondItemID = "hey-brain-root-tab-item-second";
 const tabThirdItemID = "hey-brain-root-tab-item-third";
 // constants --end
-
 var accessToken = "";
 var pageData = null;
 var pageSmartPast = [];
@@ -61,42 +60,116 @@ const pageInfo = () => {
 };
 // helpers --end
 
+//natalia 17.04
+const drawBrainWithMarker = () => {   //natalia 17.04
+  
+    let elBrainDrawerNoHandsImageWithMarker = document.getElementById(
+      "brain-drawer-no-hands-image"
+    );
+    elBrainDrawerNoHandsImageWithMarker.src = chrome.runtime.getURL(
+      "assets/icons/brain-with-marker.png"
+    );
+    elBrainDrawerNoHandsImageWithMarker.alt = "brain-with-marker";
+    elBrainDrawerNoHandsImageWithMarker.style.width = "80px"; // 03.05
+
+    document.getElementById('brain-drawer-image').style.width = "80px"; // 03.05
+    // elBrainDrawerNoHandsImageWithMarker.style.right = "26px"; // 03.05
+    document.getElementById('brain-drawer-image').style.position = "absolute";
+    document.getElementById('brain-drawer-image').style.right = "5px";
+    elBrainDrawerNoHandsImageWithMarker.style.height = "67px"; 
+    elBrainDrawerNoHandsImageWithMarker.style.top = "0px";
+    elBrainDrawerNoHandsImageWithMarker.style.right = "3px";
+
+    document.getElementById("brain-drawer-image").src = chrome.runtime.getURL(
+        "assets/icons/brain-with-marker.png"
+    ); 
+    document.getElementById("brain-drawer-image").alt = "brain-drawer-image"; 
+}  
+
+const drawBrainWithHands = () => {
+  let elBrainDrawerNoHandsImageWithMarker = document.getElementById(
+    "brain-drawer-no-hands-image"
+  );
+  elBrainDrawerNoHandsImageWithMarker.src = chrome.runtime.getURL(
+    "assets/icons/brain-drawer-no-hands.png"
+  );
+  document.getElementById('brain-drawer-image').style.width = "65px"; // 03.05
+
+
+  elBrainDrawerNoHandsImageWithMarker.alt = "brain-drawer-no-hands";
+  elBrainDrawerNoHandsImageWithMarker.style.width = "62px";
+  elBrainDrawerNoHandsImageWithMarker.style.height = "54px"; 
+  elBrainDrawerNoHandsImageWithMarker.style.right = "5px"; 
+  document.getElementById("brain-drawer-image").src = chrome.runtime.getURL(
+    "assets/icons/brain-drawer-160.png"
+  );
+  document.getElementById("brain-drawer-image").alt = "brain-drawer-image";
+// natalia 17.04
+}
+
 // init --start
 const init = () => {
-  // brain drawer --start
-  if (document.getElementById("hey-brain-drawer") === null) {
+  // 2023-03-20 Added by Stanislav: Delete elements if they're already exist
+  if (document.getElementById("hey-brain-drawer") !== null) {
+    document.body.removeChild(document.getElementById(elBrainDrawerID));
+  }
+  if (document.getElementById("hey-brain-root") !== null) {
+    document.body.removeChild(document.getElementById(elBrainRootID));
+  }
+  if (document.getElementById("hey-brain-root") !== null) {
+    document.body.removeChild(
+      document.getElementById(elBrainRootDismissButton)
+    );
+  }
+
+  // brain drawer --star
+  if (document.getElementById(elBrainDrawerID) === null) {
+    // changed 2023-03-20 by Stanislav
     let elBrainDrawer = document.createElement("div");
     elBrainDrawer.id = elBrainDrawerID;
     elBrainDrawer.classList.add("hey-brain-main");
     elBrainDrawer.style.position = "fixed";
-    elBrainDrawer.style.bottom = kBrainRootHeight - 40 + "px";
+    elBrainDrawer.style.bottom = kBrainRootHeight - 20 + "px";
     elBrainDrawer.style.right = "-36px";
     elBrainDrawer.style.width = "80px";
-    elBrainDrawer.style.height = "80px";
+    elBrainDrawer.style.height = "67px";
     elBrainDrawer.style.zIndex = "99999";
     elBrainDrawer.style.cursor = "pointer";
+   
+
     elBrainDrawer.onclick = () => {
       let elBrainRoot = document.getElementById(elBrainRootID);
+      elBrainDrawer.style.right = "26px"; // 30.04
       if (elBrainRoot.style.transform === "translateX(100%)") {
         elBrainRoot.style.transform = "translateX(0%)";
+        elBrainRootDismissButton.style.display = "block"; 
         document.getElementById("brain-drawer-no-hands-image").style.display =
           "none";
         document.getElementById("brain-drawer-image").style.display = "initial";
+        document.getElementById("brain-drawer-image").style.position = "absolute"; //03.05
+        document.getElementById("brain-drawer-image").style.right = "7px"; //03.05
+
       } else {
         elBrainRoot.style.transform = "translateX(100%)";
+        elBrainRootDismissButton.style.display = "none";  
         document.getElementById("brain-drawer-no-hands-image").style.display =
-          "initial";
+        "initial";
+        elBrainDrawer.style.right = "-36px";
         document.getElementById("brain-drawer-image").style.display = "none";
       }
     };
 
     let elBrainDrawerImage = document.createElement("img");
+
+    // pic assigned is seen ONLY inside the SMARTPAST
     elBrainDrawerImage.src = chrome.runtime.getURL(
-      "assets/icons/brain-drawer-160.png"
+      "assets/icons/brain-drawer-160.png"  
     );
+    elBrainDrawerImage.alt = "brain-drawer-160";
+    
     elBrainDrawerImage.setAttribute("id", "brain-drawer-image");
-    elBrainDrawerImage.style.width = "80px";
-    elBrainDrawerImage.style.height = "80px";
+    elBrainDrawerImage.style.width = "65px"; 
+    elBrainDrawerImage.style.height = "67px"; 
     elBrainDrawerImage.style.display = "none";
     elBrainDrawer.appendChild(elBrainDrawerImage);
 
@@ -104,16 +177,17 @@ const init = () => {
     elBrainDrawerNoHandsImage.src = chrome.runtime.getURL(
       "assets/icons/brain-drawer-no-hands.png"
     );
-    elBrainDrawerNoHandsImage.style.width = "73px";
-    elBrainDrawerNoHandsImage.style.height = "62.5px";
+    elBrainDrawerNoHandsImage.alt = "brain-drawer-no-hands"
+
+    elBrainDrawerNoHandsImage.style.width = "67px";
+    elBrainDrawerNoHandsImage.style.height = "54px";
     elBrainDrawerNoHandsImage.style.position = "absolute";
     elBrainDrawerNoHandsImage.style.top = "0px";
-    elBrainDrawerNoHandsImage.style.right = "0px";
+    elBrainDrawerNoHandsImage.style.right = "3px";
     elBrainDrawerNoHandsImage.style.display = "initial";
     elBrainDrawerNoHandsImage.setAttribute("id", "brain-drawer-no-hands-image");
     elBrainDrawerNoHandsImage.style.transition = "all 0.5s ease-in-out";
     elBrainDrawer.appendChild(elBrainDrawerNoHandsImage);
-
     document.body.appendChild(elBrainDrawer);
     // brain drawer --end
   }
@@ -132,51 +206,65 @@ const init = () => {
   elBrainRoot.style.zIndex = "99998";
   elBrainRoot.style.backgroundColor = "rgba(243, 243, 243, 0.8)";
   elBrainRoot.style.backdropFilter = "blur(10px)";
-  elBrainRoot.style.border = "1px solid rgba(200, 200, 200, 0.4)";
-  elBrainRoot.style.borderRightWidth = "0";
+  elBrainRoot.style.borderLeft = "1px solid rgba(200, 200, 200, 0.4)";
+  elBrainRoot.style.borderBottom = "1px solid rgba(200, 200, 200, 0.4)";
+  elBrainRoot.style.boxShadow = " -3px 0 3px  rgba(0, 0, 0, 0.1)";
   elBrainRoot.style.display = "flex";
+  elBrainRoot.style.flexDirection = "column"; // natalia 19/04
   elBrainRoot.style.borderBottomLeftRadius = "20px";
   elBrainRoot.style.borderTopLeftRadius = "20px";
-  elBrainRoot.style.padding = "20px";
+  elBrainRoot.style.padding = "25px 20px";
+
   elBrainRoot.style.boxSizing = "border-box";
   elBrainRoot.style.alignItems = "center";
   elBrainRoot.style.justifyContent = "center";
   elBrainRoot.style.height = kBrainRootHeight + "px";
-  elBrainRoot.style.width = "375px";
+  elBrainRoot.style.width = "427px"; // natalia 23.04
   elBrainRoot.style.transition = "all 0.3s ease-in-out";
   elBrainRoot.style.transform = "translateX(100%)";
-  elBrainRoot.style.fontFamily = "sans-serif";
+  elBrainRoot.style.fontFamily = "'Montserrat', sans-serif";
   elBrainRoot.style.fontSize = "16px";
   elBrainRoot.style.color = "#000";
   // brain root --end
 
   // brain root dismiss button --start
+
+
+
+  // brain root dismiss button --end
+
+  // brain content --start
+
+
   let elBrainRootDismissButton = document.createElement("div");
   elBrainRootDismissButton.style.position = "absolute";
-  elBrainRootDismissButton.style.top = "-10px";
-  elBrainRootDismissButton.style.left = "-10px";
-  elBrainRootDismissButton.style.width = "32px";
-  elBrainRootDismissButton.style.height = "32px";
+  elBrainRootDismissButton.style.top = "0";// natalia 23.04
+  elBrainRootDismissButton.style.left = "0";// natalia 23.04
   elBrainRootDismissButton.style.zIndex = "99999";
   elBrainRootDismissButton.style.cursor = "pointer";
-  elBrainRootDismissButton.onclick = () => {
-    elBrainRoot.style.transform = "translateX(100%)";
-    document.getElementById("brain-drawer-no-hands-image").style.display =
-      "initial";
-    document.getElementById("brain-drawer-image").style.display = "none";
-  };
+  elBrainRootDismissButton.style.display = "none";
+
+
 
   let elBrainRootDismissButtonImage = document.createElement("img");
   elBrainRootDismissButtonImage.src = chrome.runtime.getURL(
     "assets/images/drawer-dismiss.png"
   );
-  elBrainRootDismissButtonImage.style.width = "32px";
-  elBrainRootDismissButtonImage.style.height = "32px";
+  elBrainRootDismissButtonImage.alt = "drawer-dismiss";
+  elBrainRootDismissButtonImage.style.width = "24px";// natalia 23.04
+  elBrainRootDismissButtonImage.style.height = "24px";// natalia 23.04
+  elBrainRootDismissButtonImage.style.filter = "drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.5))";
   elBrainRootDismissButton.appendChild(elBrainRootDismissButtonImage);
   elBrainRoot.appendChild(elBrainRootDismissButton);
-  // brain root dismiss button --end
 
-  // brain content --start
+  elBrainRootDismissButton.onclick = () => {
+    elBrainRoot.style.transform = "translateX(100%)";
+    document.getElementById("brain-drawer-no-hands-image").style.display =
+      "initial";
+    document.getElementById("brain-drawer-image").style.display = "none";
+    document.getElementById(elBrainDrawerID).style.right = "-36px";
+  };
+
   let elBrainContent = document.createElement("div");
   elBrainContent.id = elBrainContentID;
   elBrainContent.style.position = "relative";
@@ -186,17 +274,18 @@ const init = () => {
   elBrainContent.style.overflowY = "auto";
   elBrainContent.style.overflowX = "hidden";
   elBrainRoot.appendChild(elBrainContent);
+
   // brain content --end
 
   // brain root tabs --start
-  const tabItemHeight = 32;
+  const tabItemHeight = 25; // natalia 23.04
   const tabItemDeactiveBackground = "#0A0458";
 
   let elBrainRootTabs = document.createElement("div");
   elBrainRootTabs.id = elBrainRootTabsID;
   elBrainRootTabs.style.position = "absolute";
-  elBrainRootTabs.style.top = -tabItemHeight - 1 + "px"; // 1px border
-  elBrainRootTabs.style.left = "0";
+  elBrainRootTabs.style.top = -tabItemHeight + "px"; 
+  elBrainRootTabs.style.left = "-40px"; // natalia 23.04
   elBrainRootTabs.style.width = "100%";
   elBrainRootTabs.style.height = tabItemHeight + "px";
   elBrainRootTabs.style.zIndex = "99999";
@@ -205,12 +294,24 @@ const init = () => {
   elBrainRootTabs.style.alignItems = "center";
   elBrainRootTabs.style.justifyContent = "center";
   elBrainRootTabs.style.boxSizing = "border-box";
+  elBrainRootTabs.style.fontSize= "12px";
+  elBrainRootTabs.style.fontWeight = "600";
   elBrainRoot.appendChild(elBrainRootTabs);
 
   // brain root tab first --start
-  let elBrainRootTabItemFirst = createTabItem(tabFirstItemID, "SMARTPAST");
+  let elBrainRootTabItemFirst = createTabItem(tabFirstItemID, "<span style='color:#6416F3; font-size:12px; font-weight:600;'>SMART</span>PAST"); // natalia 23.04
   elBrainRootTabItemFirst.style.height = tabItemHeight + "px";
-  elBrainRootTabItemFirst.style.backgroundColor = "rgba(243, 243, 243, 0.8)";
+  elBrainRootTabItemFirst.style.backgroundColor = "#EFEFEF";  // natalia 23.04
+  elBrainRootTabItemFirst.style.borderLeft = "1px solid rgba(200, 200, 200, 0.4)";// natalia 23.04
+  elBrainRootTabItemFirst.style.borderBottom = "0px";// natalia 23.04
+  // elBrainRoot.style.borderRightWidth = "0";// natalia 23.04
+  elBrainRootTabItemFirst.style.borderBottom = "none";// natalia 23.04
+  elBrainRootTabItemFirst.style.boxShadow = " -3px 0 3px rgba(0, 0, 0, 0.1)";// natalia 23.04
+  elBrainRootTabItemFirst.style.fontWeight = '600';
+  elBrainRootTabItemFirst.style.fontSize= "12px";
+  elBrainRootTabItemFirst.style.fontFamily = "'Montserrat', sans-serif";
+
+
   elBrainRootTabItemFirst.style.color = tabItemDeactiveBackground;
   elBrainRootTabItemFirst.onclick = () => {
     selectTabItem(tabFirstItemID);
@@ -223,6 +324,9 @@ const init = () => {
   elBrainRootTabItemSecond.style.height = tabItemHeight + "px";
   elBrainRootTabItemSecond.style.backgroundColor = tabItemDeactiveBackground;
   elBrainRootTabItemSecond.style.color = "#fff";
+  elBrainRootTabItemSecond.style.fontWeight = '600'; //nastya 23.04
+  elBrainRootTabItemSecond.style.fontSize = '12px'; //nastya 23.04
+  elBrainRootTabItemSecond.style.fontFamily = "'Montserrat', sans-serif";
   elBrainRootTabItemSecond.style.marginLeft = "8px";
   elBrainRootTabItemSecond.style.marginRight = "8px";
   elBrainRootTabItemSecond.onclick = () => {
@@ -236,6 +340,9 @@ const init = () => {
   elBrainRootTabItemThird.style.height = tabItemHeight + "px";
   elBrainRootTabItemThird.style.backgroundColor = tabItemDeactiveBackground;
   elBrainRootTabItemThird.style.color = "#fff";
+  elBrainRootTabItemThird.style.fontWeight = '600';//nastya 23.04
+  elBrainRootTabItemThird.style.fontSize = '12px';
+  elBrainRootTabItemThird.style.fontFamily = "'Montserrat', sans-serif";
   elBrainRootTabItemThird.onclick = () => {
     selectTabItem(tabThirdItemID);
   };
@@ -275,13 +382,16 @@ const init = () => {
         domain: pageInfo().domain,
       },
     },
-    (response) => {
+    (response) => { 
       elBrainRootTabs.style.display = "flex";
       elBrainContent.style.display = "block";
       elBrainLoader.style.display = "none";
+
       if (response) {
         pageData = response;
-        console.log("pageData", pageData);
+        if (pageData.tags.length > 0 || pageData.notes.length > 0 && pageData.notes!=="\n") {
+          drawBrainWithMarker(); //natalia 17.04
+        } 
         if (!pageData.favicon_url) {
           pageData.favicon_url =
             "https://www.google.com/s2/favicons?domain=" +
@@ -302,18 +412,7 @@ const init = () => {
           );
         }
 
-        if (pageData.tags.length > 0 || pageData.notes.length > 0) {
-          let elBrainDrawerNoHandsImageWithMarker = document.getElementById(
-            "brain-drawer-no-hands-image"
-          );
-          elBrainDrawerNoHandsImageWithMarker.src = chrome.runtime.getURL(
-            "assets/icons/brain-with-marker.png"
-          );
-          elBrainDrawerNoHandsImageWithMarker.style.width = "80px";
-          elBrainDrawerNoHandsImageWithMarker.style.height = "67px";
-          elBrainDrawerNoHandsImageWithMarker.style.top = "0px";
-          elBrainDrawerNoHandsImageWithMarker.style.right = "10px";
-        }
+ 
       }
     }
   );
@@ -338,7 +437,7 @@ const createTabItem = (id, title) => {
   tabItem.style.alignItems = "center";
   tabItem.style.justifyContent = "center";
   tabItem.style.cursor = "pointer";
-  tabItem.style.padding = "0px 12px";
+  tabItem.style.padding = "0px 18px";
   return tabItem;
 };
 
@@ -395,31 +494,55 @@ const selectTabItem = (tabID) => {
 // tab content related actions --start
 
 // tab smartpast content --start
-const createSmartpastContent = () => {
+
+
+let selectedText = null; 
+
+function createSmartpastContent() {
+  // start natalia 21/04 
+  if (document.getElementById("taglink") !== null)  {document.getElementById("taglink").remove();}
+  let tagLink = document.createElement("a");
+  tagLink.innerHTML = `<a href="https://heybrain.ai/cloud" id="taglink" target="_blank">view all</a>`;
+  tagLink.style.position = "absolute";
+  tagLink.style.bottom = "0px";
+  tagLink.style.left = "0px";
+  tagLink.style.marginTop = "10px";
+  tagLink.style.fontSize = "14px";
+  tagLink.style.lineHeight = "20px";
+  tagLink.style.fontWeight = "400";
+  tagLink.style.fontStyle = "normal";
+  tagLink.style.textDecorationLine = "underline";
+  tagLink.style.color = "#2B007B";
+
+  // end natalia 21/04 
+
   let tabContent = document.createElement("div");
   tabContent.id = elBrainContentID + "-smartpast-content";
   tabContent.style.position = "relative";
   tabContent.style.display = "flex";
   tabContent.style.flexDirection = "column";
-  tabContent.style.width = "100%";
-  tabContent.style.height = "100%";
-  tabContent.innerHTML = "";
-  document.getElementById(elBrainContentID).innerHTML = "";
-  document.getElementById(elBrainContentID).appendChild(tabContent);
+  tabContent.style.width = "376px"; // natalia 23.04
+  tabContent.style.height = "506px"; // natalia 23.04
 
+  tabContent.style.overflowY = "auto";
+  tabContent.style.overflowX = "hidden";
+  document.getElementById(elBrainContentID).innerHTML = ``;
+  document.getElementById(elBrainContentID).appendChild(tabContent);
+ 
   document.getElementById(elBrainLoaderID).style.display = "flex";
   chrome.runtime.sendMessage(
     {
       action: "get-smartpast",
       data: {
         access_token: accessToken,
-        id: pageData.id,
-        is_new: pageData.is_new,
-        text: pageData.title,
+        id: selectedText !== null ? null : pageData.id,
+        is_new: selectedText !== null ? true : pageData.is_new,
+        text: selectedText !== null ? selectedText : pageData.title,
         limit: 10,
       },
     },
     (response) => {
+    console.log(response);
       document.getElementById(elBrainLoaderID).style.display = "none";
       if (response) {
         pageSmartPast = response;
@@ -440,21 +563,23 @@ const createSmartpastContent = () => {
             elSmartpastItem.style.position = "relative";
             elSmartpastItem.style.border = "1px solid rgba(200, 200, 200, 0.4)";
             elSmartpastItem.style.borderRadius = "12px";
-            elSmartpastItem.style.margin = "8px";
-            elSmartpastItem.style.padding = "8px";
+            elSmartpastItem.style.marginBottom = "10px";
+            elSmartpastItem.style.padding = "15px";
             elSmartpastItem.style.display = "flex";
             elSmartpastItem.style.flexDirection = "column";
             elSmartpastItem.style.justifyContent = "space-between";
             elSmartpastItem.style.cursor = "pointer";
             elSmartpastItem.style.boxSizing = "border-box";
             elSmartpastItem.style.backgroundColor = "white";
+            elSmartpastItem.style.width= "366px";
+            elSmartpastItem.style.height = "290px";
             elSmartpastItem.onclick = () => {
               window.open(item.url, "_blank");
             };
 
             const favIcon = `
-              <div style="width:32px;min-width:32px;">
-                <img src="${item.favicon_url}" width="24" height="24" />
+              <div>
+                <img src="${item.favicon_url}" width="16" height="16" alt="favicon" />
               </div>
             `;
 
@@ -466,10 +591,15 @@ const createSmartpastContent = () => {
             const screenshot_url = item.screenshot_url
               ? item.screenshot_url
               : item.favicon_url;
+
             const blur_effect = !item.screenshot_url
-              ? "style='filter: blur(6px);max-height: 140px;object-fit: contain; margin: auto;'"
+              ? "style=' filter: blur(6px);border:1px solid #EFEFEF; border-radius:8px; max-height: 147px;object-fit: contain; margin: 10px 0 auto;'"
               : "";
-            const screenshot = `<img src="${screenshot_url}" width="100%" height="140px" ${blur_effect}>`;
+            // natalia 24.04
+            let isScreenshotIsSeen = false; // variable responsible for behaviour of elSmartpastItem's screenshot
+            const screenshot = isScreenshotIsSeen
+            ? `<img src="${screenshot_url}" width="332px" height="147px" ; ${blur_effect}>`
+            : ``
 
             const descriptionImgSrc = chrome.runtime.getURL(
               "assets/images/description.png"
@@ -486,9 +616,9 @@ const createSmartpastContent = () => {
                 : descriptionText;
 
             const descriptionContent = `
-              <div class="flex flex-row w-full p-1 space-x-2" style="font-size:12px;">
-                <div class="shrink-0"><img src="${descriptionImgSrc}" width="24px" height="24px" /></div>
-                <div>${descriptionText}</div>
+              <div class="brain-flex brain-flex-row w-full p-1 space-x-2" style="font-size:10px; line-height:17px;font-weight:400;">
+                <div class="shrink-0"><img src="${descriptionImgSrc}" width="16px" height="16px" /></div>
+                <div style="max-height:20px; margin-left: 9px; line-height: 10px; overflow: hidden; color: rgba(0,0,0,0.8);">${descriptionText}</div>
               </div>
             `;
 
@@ -496,20 +626,30 @@ const createSmartpastContent = () => {
 
             if (item.__timestamp) {
               const date = new Date(item.__timestamp);
+              const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+              const monthIndex = date.getMonth();
+              const year = date.getFullYear();
+              const day = date.getDate();
               const dateStr =
-                date.getDate() +
-                "/" +
-                (date.getMonth() + 1) +
-                "/" +
-                date.getFullYear() +
-                " " +
-                date.getHours() +
-                ":" +
-                date.getMinutes();
+                // date.getDate() +
+                // "/" +
+                // (date.getMonth() + 1) +
+                // "/" +
+                // date.getFullYear() +
+                // " " +
+                // date.getHours() +
+                // ":" +
+                // date.getMinutes();
+              
+               `${monthNames[monthIndex]} ${day}, ${year}`;
+
+
               dateContent =
-                `<div style="margin-left:32px;font-size:12px;opacity:0.5;">` +
+                `<div style="margin:5px 0 3px 25px;font-size:10px; font-weight: 500; opacity:0.5;">` +
                 dateStr +
-                `</div>`;
+                `</div>
+                
+                `;
             }
 
             let domain = item.domain;
@@ -527,18 +667,18 @@ const createSmartpastContent = () => {
 
             elSmartpastItem.innerHTML =
               `
-              <div style="position: relative; display: flex; flex-direction: column; justify-content: space-between; font-size: 16px;" class="space-y-4">
-              <div class="flex flex-col">
-                <div class="flex flex-row space-x-2">
+              <div style="font-family: 'Montserrat', sans-serif;position: relative; display: flex; flex-direction: column; justify-content: space-between; font-size: 16px;" class="space-y-4">
+              <div class="brain-flex brain-flex-col">
+                <div class="brain-flex brain-flex-row space-x-2">
                 ` +
               favIcon +
               `
-                    <div class="font-semibold">` +
+                    <div style="font-size:14px; font-family: 'Montserrat', sans-serif; font-weight: bold;">` +
               title +
               `
                     </div>
                   </div>
-                  <div style="margin-left:40px;font-size:12px;opacity:0.5;">` +
+                  <div style="font-weight:600; font-family: 'Montserrat', sans-serif; margin:5px 0 0 25px;font-size:10px;opacity:0.5;">` +
               domain +
               `</div>
                 </div>
@@ -552,11 +692,17 @@ const createSmartpastContent = () => {
               dateContent +
               `
               </div>
+             
               `;
             smartPastContentEl.appendChild(elSmartpastItem);
           });
         }
+      
+        document.getElementById(elBrainContentID).appendChild(tagLink);// end natalia 21/04 
       }
+    
+         if(selectedText !== null) selectedText = null;
+       
     }
   );
 
@@ -574,8 +720,8 @@ const createTagsContent = () => {
   tabContent.style.flexDirection = "column";
   tabContent.className = "space-y-4";
 
-  const favIcon = `<div><img src="${pageData.favicon_url}" width="32" height="32" /></div>`;
-
+  const favIcon = `<div><img src="${pageData.favicon_url}" width="16" height="16" alt="favIcon" /></div>`;
+  const uploadIcon = `<div><img src="${chrome.runtime.getURL("assets/images/upload.png")}" width="24" height="24" alt="upload" /></div>`;
   const title =
     pageData.title.length > 35
       ? pageData.title.substring(0, 35) + "..."
@@ -583,39 +729,41 @@ const createTagsContent = () => {
 
   tabContent.innerHTML =
     `
-    <div class="flex flex-row space-x-2">
+    <div class="brain-flex brain-flex-row space-x-2">
     ` +
-    favIcon +
+    favIcon + 
     `
-        <div class="font-semibold">` +
-    title +
+        <div class="brain-flex" style="width:100%; justify-content:space-between; font-weight:600;">` +
+    title + uploadIcon +
     `
         </div>
-      </div>
-    <div class="flex flex-grow flex-wrap" style="align-content: baseline;" id="` +
+    </div>
+    <div class="brain-flex brain-flex-grow brain-flex-wrap" style="align-content: baseline;" id="` +
     elBrainContentID +
     `-tags-content-active-tags-list">
     </div>
-    <div class="flex">
-      <div style="position:absolute;right: 20px;margin-top: 8px;font-size: 16px;cursor: pointer;display: none;" id="` +
+    <div class="brain-flex">
+      <div class="hey-brain-main input-clear" style="position:absolute; right: 20px; margin-top: 12px;font-size: 16px;cursor: pointer; display: none;" id="` +
     elBrainContentID +
     `-tags-content-tag-input-clear">
         <img src="` +
     chrome.runtime.getURL("assets/images/tag-input-clear.png") +
-    `" width="24" height="24" />
+    `" width="24" height="24" alt="tag-input-clear"/>
       </div>
       <input type="text" id="` +
     elBrainContentID +
     `-tags-content-input" 
-      class="flex-grow px-4 py-2 border border-gray-300 rounded-full" 
-      style="background: white; padding-right: 50px;"
-      placeholder="Add a tag" />
+      class="brain-flex-grow px-6  rounded-full" 
+      style="margin-bottom: 20px; background: white; width: 378px; height: 48px; font-size:14px; border:none;"
+      placeholder="add new tag" />
     </div>
-    <div class="flex flex-grow flex-wrap" style="align-content: baseline;" id="` +
+    <div style="font-size:16px; font-weight:700;">Suggestions</div>
+    <div class="brain-flex brain-flex-grow brain-flex-wrap" style="align-content: baseline;" id="` +
     elBrainContentID +
     `-tags-content-suggested">
     
     </div>
+    <a href="https://heybrain.ai/` + createPeaceOfLink() + `" target="_blank" style="color: #2B007B; text-decoration: underline; font-weight:400; font-size:14px;">view all tags</a>
   `;
 
   document.getElementById(elBrainContentID).innerHTML = "";
@@ -666,6 +814,12 @@ const createTagsContent = () => {
       }
     );
   }
+
+  //  not to affect content in browser while typing tags
+    document.getElementById( elBrainContentID + "-tags-content-input").addEventListener('keydown', function(e) {
+          e.stopPropagation();
+    });
+
   loadRecommendedTags();
 };
 
@@ -745,6 +899,7 @@ const onResetTagInput = () => {
 };
 
 const addTag = (tag) => {
+
   const tags = pageData.tags;
   tags.push(tag);
   tags.forEach((tag) => {
@@ -758,6 +913,9 @@ const addTag = (tag) => {
   document.getElementById(
     elBrainContentID + "-tags-content-tag-input-clear"
   ).style.display = "none";
+  if (pageData.tags.length > 0 || pageData.notes.length > 0 && pageData.notes!=="\n") {
+    drawBrainWithMarker();
+  }
   chrome.runtime.sendMessage(
     {
       action: "add-tags",
@@ -790,7 +948,13 @@ const removeTag = (e) => {
     tags.splice(index, 1);
   }
   pageData.tags = tags;
+  // natalia 17.04
+  if (pageData.tags.length === 0 && pageData.notes.length === 0 || pageData.notes === "\n") {
+    drawBrainWithHands();
+}// natalia 17.04
+
   fillTagsContent();
+
   chrome.runtime.sendMessage(
     {
       action: "remove-tags",
@@ -808,9 +972,8 @@ const removeTag = (e) => {
     }
   );
 };
-
 const loadRecommendedTags = () => {
-  if (pageData.tags.length === 0) {
+  if (pageData.tags.length === 0 ) {
     return;
   }
   chrome.runtime.sendMessage(
@@ -835,6 +998,21 @@ const loadRecommendedTags = () => {
   );
 };
 
+const createPeaceOfLink = () => {
+  const tags = pageData.tags;
+  let peace = '';
+  for (let i = 0; i < (tags.length-2); i++) {
+     peace += `${tags[i]} %2C `;
+  }
+
+  peace += tags[tags.length-1];
+  if (tags.length === 0){
+    peace = '';
+  }
+  return peace;
+}
+
+
 const fillTagsContent = () => {
   const tags = pageData.tags;
   if (tags.length === 0) {
@@ -843,7 +1021,7 @@ const fillTagsContent = () => {
     ).innerHTML = "";
     var emptyStateHTML = "";
     emptyStateHTML +=
-      '<div class="flex flex-col items-center justify-center text-md font-semibold" style="align-self: center;width: 100%;height: 100%;">';
+      '<div class="brain-flex brain-flex-col items-center justify-center text-md font-semibold" style="align-self: center;width: 100%;height: 100%;">';
     emptyStateHTML += "<p style='margin-bottom: 0px;'>No tags yet 😔</p>";
     emptyStateHTML +=
       "<p class='font-normal text-gray-500'>Add tags from our suggestions</p>";
@@ -856,20 +1034,21 @@ const fillTagsContent = () => {
   var tagsHTML = "";
   tags.forEach((tag, index) => {
     tagsHTML +=
-      '<div class="flex flex-row items-center justify-center px-2 py-1 space-x-1 mr-1 mb-1 text-sm font-medium rounded-full" style="background-color: #E7E8FC; height:24px;">';
-    tagsHTML += '<div class="flex-shrink-0"><img src="';
+      '<div class="hey-brain-main brain-flex brain-flex-row items-center justify-center px-2 py-1 space-x-1 mr-1 mb-1 text-sm rounded-full" style="background-color: #E7E8FC; height:24px; font-weight: 600; font-size: 12px;">';
+    tagsHTML += '<div class="hey-brain-main brain-flex-shrink-0"><img src="';
     tagsHTML += chrome.runtime.getURL("assets/images/tag.png");
-    tagsHTML += '" width="16px" height="16px" /></div>';
+    tagsHTML += '"alt="tag"/></div>';
     tagsHTML += "<div id='tag-item-" + index + "'>" + tag + "</div>";
     tagsHTML +=
-      '<div class="flex-shrink-0 cursor-pointer remove-tag-item" id="tag-remove-item-id-' +
+      '<div class="hey-brain-main brain-flex-shrink-0 cursor-pointer remove-tag-item" id="tag-remove-item-id-' +
       index +
       '"><img idx="' +
       index +
       '" src="';
     tagsHTML += chrome.runtime.getURL("assets/images/tag-remove.png");
-    tagsHTML += '" width="16px" height="16px" /></div>';
+    tagsHTML += '"alt="tag-remove"/></div>';
     tagsHTML += "</div>";
+    
   });
   document.getElementById(
     elBrainContentID + "-tags-content-active-tags-list"
@@ -938,7 +1117,7 @@ const fillSuggestionsContent = () => {
         item.kind && item.kind === "recommended" ? "#6CF7D3" : "#82EBFC";
       var iconSrc =
         item.kind && item.kind === "recommended" ? "tag" : "tag-suggestion";
-
+        "tag";
       if (item.local_type && item.local_type === "recommended") {
         bgColor = "#6CF7D3";
         iconSrc = "tag";
@@ -946,15 +1125,15 @@ const fillSuggestionsContent = () => {
 
       const el = document.createElement("div");
       el.className =
-        "flex flex-row items-center justify-center px-2 py-1 space-x-1 mr-1 mb-1 text-sm font-medium rounded-full cursor-pointer tag-suggestion-item-" +
+        "brain-flex brain-flex-row items-center justify-center px-2 py-1 space-x-1 mr-1 mb-1 text-sm rounded-full cursor-pointer tag-suggestion-item-" +
         index;
       el.style.backgroundColor = bgColor;
       el.style.height = "24px";
       el.innerHTML =
-        '<div class="flex-shrink-0"><img src="' +
+        '<div class="brain-flex-shrink-0" style="font-weight: 600; font-size: 12px;"><img src="' +
         chrome.runtime.getURL("assets/images/" + iconSrc + ".png") +
-        '" width="16px" height="16px" /></div>';
-      el.innerHTML += "<div>" + tag + "</div>";
+        '"alt="icon"/></div>';
+      el.innerHTML += "<div style='font-weight: 600; font-size: 12px;'>" + tag + "</div>";
       el.addEventListener("click", (e) => {
         addTag(tag);
       });
@@ -982,18 +1161,19 @@ const fillAutoCompleteContent = (items) => {
       var bgColor =
         item.kind && item.kind === "recommended" ? "#6CF7D3" : "#82EBFC";
       var iconSrc =
-        item.kind && item.kind === "recommended" ? "tag" : "tag-suggestion";
+        // item.kind && item.kind === "recommended" ? "tag" : "tag-suggestion";
+        "tag";
 
       const el = document.createElement("div");
       el.className =
-        "flex flex-row items-center justify-center px-2 py-1 space-x-1 mr-1 mb-1 text-sm font-medium rounded-full cursor-pointer tag-suggestion-item-" +
+        "brain-flex brain-flex-row items-center justify-center px-2 py-1 space-x-1 mr-1 mb-1 text-sm font-medium rounded-full cursor-pointer tag-suggestion-item-" +
         index;
       el.style.backgroundColor = bgColor;
       el.style.height = "24px";
       el.innerHTML =
-        '<div class="flex-shrink-0"><img src="' +
+        '<div class="brain-flex-shrink-0"><img src="' +
         chrome.runtime.getURL("assets/images/" + iconSrc + ".png") +
-        '" width="16px" height="16px" /></div>';
+        '"alt="icon"/></div>';
       el.innerHTML += "<div>" + tag + "</div>";
       el.addEventListener("click", (e) => {
         addTag(tag);
@@ -1016,7 +1196,7 @@ const createNotesContent = () => {
 
   const favIcon = `
     <div>
-      <img src="${pageData.favicon_url}" width="32" height="32" />
+      <img src="${pageData.favicon_url}" width="16" height="16" alt="favIcon"/>
     </div>
   `;
 
@@ -1027,8 +1207,8 @@ const createNotesContent = () => {
 
   tabContent.innerHTML =
     `
-      <div class="flex flex-col space-y-2 h-full">
-        <div class="flex flex-row space-x-2">
+      <div class="brain-flex brain-flex-col space-y-2 h-full">
+        <div class="brain-flex brain-flex-row space-x-2">
       ` +
     favIcon +
     `
@@ -1037,19 +1217,28 @@ const createNotesContent = () => {
     `
           </div>
         </div>
-        <div class="flex flex-grow fields">
+        <div class="brain-flex brain-flex-grow fields"  style="overflow: hidden;">
           <textarea class="w-full h-full border border-gray-100 rounded-lg p-2 text-md" style="background: white;" id="` +
     elBrainContentID +
     `-notes-textarea"></textarea>
         </div>
-        <div class="flex flex-row space-x-2 items-center">
-          <a href="https://heybrain.ai/?filter=modified_urls" target="_blank">See all notes</a>
-          <div class="flex-grow" id="` +
+        <div class="brain-flex brain-flex-row space-x-2 items-center">
+        <a href="https://heybrain.ai/?filter=modified_urls" target="_blank" style="color: #2B007B; font-weight:400; font-size:14px; text-decoration:";>view all notes</a>
+          <div class="brain-flex-grow" id="` +
     elBrainContentID +
     `-notes-footer">
           </div>
+    
             <div>
-              <button class="px-6 py-2 text-white font-semibold rounded-full text-xs" style="background:#2B007B;" id="` +
+            <button class="save-button py-2 text-white font-semibold rounded-full text-xs"  id="` +
+      elBrainContentID +
+      `-notes-share-button">
+                  SHARE
+                </button>
+            </div>
+  
+              <div>
+                <button class=" save-button py-2 text-white font-semibold rounded-full text-xs " id="` +
     elBrainContentID +
     `-notes-save-button">
                 SAVE
@@ -1062,6 +1251,11 @@ const createNotesContent = () => {
 
   document.getElementById(elBrainContentID).innerHTML = "";
   document.getElementById(elBrainContentID).appendChild(tabContent);
+  
+  // not to affect content in browser while typing notes
+  tabContent.addEventListener("keydown", (e) => {
+    e.stopPropagation();
+  });
 
   // save notes button click listener
   document
@@ -1075,15 +1269,15 @@ const createNotesContent = () => {
   });
 
   if (pageData.notes_html) {
-    document.querySelector(".text").innerHTML = pageData.notes_html;
+    document.querySelector(".hey-brain-main.text").innerHTML = pageData.notes_html;
   }
 };
 
 const saveNotes = () => {
   simpleEditor.save();
-  let notes = document.querySelector(".text").innerText;
-  let notes_html = document.querySelector(".text").innerHTML;
-
+  let notes = document.querySelector(".hey-brain-main.text").innerText;
+  let notes_html = document.querySelector(".hey-brain-main.text").innerHTML;
+ 
   if (
     document.getElementById(elBrainContentID + "-notes-save-button")
       .innerText === "SAVING"
@@ -1104,8 +1298,10 @@ const saveNotes = () => {
       },
     },
     (response) => {
+      // console.log(response);
       if (response) {
         pageData.notes = notes;
+        pageData.notes === "\n" ? drawBrainWithHands() : drawBrainWithMarker();// natalia 01.05
         pageData.notes_html = notes_html;
         document.getElementById(
           elBrainContentID + "-notes-save-button"
@@ -1121,6 +1317,8 @@ const saveNotes = () => {
       }
     }
   );
+  
+
 };
 // tab notes content --end
 
@@ -1142,6 +1340,15 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     if (document.getElementById("hey-brain-root") !== null) {
       document.body.removeChild(document.getElementById(elBrainRootID));
     }
+    if (document.getElementById("hey-brain-root") !== null) {
+      // 2023-03-20 Added by Stanislav
+      document.body.removeChild(
+        document.getElementById(elBrainRootDismissButton)
+      );
+    }
+  } else if (request.action === "smartpast-selected") {
+    selectedText = request.text;
+    createSmartpastContent();
   }
 });
 

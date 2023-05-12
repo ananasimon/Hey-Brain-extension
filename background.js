@@ -1,75 +1,127 @@
+try {
+  importScripts("assets/js/black_list.js");
+} catch (e) {
+  console.log(e);
+} // 2023-03-12 #1 added by Stanislav
+
 const baseURL = "https://api.nlpgraph.com/stage/api";
 var autoCompleteControllers = [];
 let enabled; // shows if app's toggle is switched on or off: true or false
 checkEnable();
+getBlackList(); // 2023-03-12 #10 added by Stanislav
+let current_page = { url: "", id: "" }; // 2023-03-14 #10 added by Stanislav
+
+
+let text = null;//natalia 3.04
 
 function checkEnable() {
-  chrome.storage.local.get(["enabled"], (result) => {
+  chrome.storage.local.get(["enabled"]).then((result) => {
     enabled = result.enabled;
   });
 }
 
+// 2023-03-12 #6 added by Stanislav: BEGIN  ------------------------
+let startOrStop = () => {
+ chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) { 
+    let url = current_page.url;
+    let id = current_page.id;
+    // console.log(current_page);
+    chrome.storage.local.get(["enabled"]).then((result) => {
+      refreshBlackList().then(() => {
+        let blackListIdx = isInBlacklist(url, true, false);
+        // console.log('--- INTING START OR STOP ---');
+        let needToInit = result.enabled && blackListIdx < 0; /// ToDo: add the condition for Snoose
+        // console.log(blackListIdx);
+        // console.log(needToInit);
+
+        chrome.tabs.sendMessage(id, {
+          action: needToInit ? "init" : "deinit",
+        });
+
+        // console.log('--- INTING START OR STOP DONE ---');
+      }); // refreshBlacklist end
+    });
+  });
+};
+// 2023-03-12 #6 added by Stanislav: END  ------------------------
+
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-  checkEnable();
-  if (enabled && changeInfo.status === "complete" && tab.active) {
-    chrome.tabs.sendMessage(tabId, { action: "init" });
+  updateCurrentUrl(); // 2023-03-12 #2 added by Stanislav
+  if (changeInfo.status === "complete" && tab.active) {
+    // 2023-03-19 changed by Stanislav
+    startOrStop(); // 2023-03-13 #7 changed by Stanislav
   }
 });
 
 chrome.storage.onChanged.addListener((changes) => {
-  if (changes?.enabled) {
-    chrome.storage.local.get(["enabled"]).then((result) => {
-      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, {
-          action: result.enabled ? "init" : "deinit",
-        });
-      });
-    });
+  if (changes?.enabled || changes?.heybrain_black_list) {
+    // 2023-03-20 changed by Stanislav
+    // console.log('!!! storage was changed')
+    startOrStop(); // 2023-03-13 #8 changed by Stanislav
   }
 });
 
-// chrome.storage.onChanged.addListener((changes) => {
-//   if (changes?.enabled) {
-//     let newValue = changes.enabled.newValue;
-//     chrome.tabs.query({  "active": true, currentWindow: true }, function (tabs) {
-
-//         chrome.tabs.sendMessage(tabs[0].id, {
-//           action: newValue ? "init" : "deinit",
-//         });
-
-//     });
-//   }
-// });
-
-chrome.tabs.onActivated.addListener((activeInfo) => {
-  chrome.storage.local.get(["enabled"]).then((result) => {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      if (result.enabled) {
-        chrome.tabs.sendMessage(tabs[0].id, { action: "init" });
-      } else {
-        chrome.tabs.sendMessage(tabs[0].id, { action: "deinit" });
-      }
-    });
-  });
+chrome.tabs.onActivated.addListener(() => {
+  updateCurrentUrl(); // 2023-03-12 #3 added by Stanislav
+  startOrStop(); // 2023-03-13 #9 changed by Stanislav
 });
 
-// for sending request about all opened tabs when storage changed
-
-// chrome.storage.onChanged.addListener((changes) => {
-//   if (changes?.enabled) {
-//     let newValue = changes.enabled.newValue;
-//     chrome.tabs.query({ currentWindow: true }, function (tabs) {
-//       tabs.forEach((tab) => {
-//         chrome.tabs.sendMessage(tab.id, {
-//           action: newValue ? "init" : "deinit",
-//         });
-//       });
-//     });
-//   }
-// });
+// 2023-03-12 #4 added by Stanislav: BEGIN  ------------------------
+function updateCurrentUrl() {
+  // Save the current url to local storage for sharing it between modules
+  chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
+    if (
+      tabs[0].url != "" &&
+      tabs[0].url !== undefined &&
+      tabs[0].url !== null
+    ) {
+      chrome.storage.local.set({ heybrain_current_url: tabs[0].url });
+      current_page.url = tabs[0].url;
+      current_page.id = tabs[0].id;
+    } else chrome.storage.local.set({ heybrain_current_url: "" });
+  });
+  getBlackList;
+}
+// 2023-03-12 #4 added by Stanislav: END  --------------------------
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === "get-url-data") {
+  // 2023-03-12 #5 added by Stanislav: BEGIN  ------------------------
+  if (request.action === "getBlackList") {
+    // Getting the response for the content (is the URL in the black list)
+
+    let resp_data = isInBlacklist(request.key, true, false);
+    //  console.log('Sending the BlackList response for Page: '+ resp_data);
+    sendResponse({ data: [resp_data] });
+  }
+  // 2023-03-12 #5 added by Stanislav: END  --------------------------
+
+  // 2023-03-14 #11 added by Stanislav: BEGIN  ------------------------
+  else if (request.action === "getBlackListDom") {
+    // Getting the response for the content (is the DOM URL in the black list)
+    let resp_data = isInBlacklist(request.key, true, true);
+    //  console.log('Sending the BlackList response for Domain: '+ resp_data);
+    sendResponse({ data: [resp_data] });
+  }
+  // 2023-03-14 #11 added by Stanislav: END  --------------------------
+
+  // 2023-03-15 #12 added by Stanislav: BEGIN  ------------------------
+  else if (request.action === "addPageToBlackList") {
+    let resp_data = addPageToBlackList(request.key, false);
+    sendResponse({ data: [resp_data] });
+  } else if (request.action === "addDomainToBlackList") {
+    let resp_data = addPageToBlackList(request.key, true);
+    sendResponse({ data: [resp_data] });
+  } else if (request.action === "delPageFromBlackList") {
+    let resp_data = deletePageFromBlackList(request.key, false);
+    sendResponse({ data: [resp_data] });
+  } else if (request.action === "delDomainFromBlackList") {
+    let resp_data = deletePageFromBlackList(request.key, true);
+    sendResponse({ data: [resp_data] });
+  }
+
+  // 2023-03-15 #12 added by Stanislav: END --------------------------
+  else if (request.action === "get-url-data") {
+
     fetch(baseURL + "/brain/get_url_data", {
       method: "POST",
       headers: {
@@ -78,7 +130,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       },
       body: JSON.stringify({
         url: sender.url,
-        title: sender.tab.title,
+         //natalia 03.01
+        title:  sender.tab.title,  // as now
+        // title:  text !== null ? text : sender.tab.title,
+         //natalia 03.01
         domain: request.data.domain,
         description: request.data.page_description,
       }),
@@ -90,8 +145,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         sendResponse(data.response);
       });
+       //natalia 03.01
+      // if(text !== null )text = null;
+      // console.log(`after ${text}`);
+        //natalia 03.01
     return true;
   } else if (request.action === "get-smartpast") {
+    // console.log(`before ${text}`);
     const url = new URL(baseURL + "/brain/embeddings/related");
 
     url.search = new URLSearchParams({
@@ -100,7 +160,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       is_new: request.data.is_new ? 1 : 0,
       limit: request.data.limit || 10,
     });
-
+    
     fetch(url.toString(), {
       headers: {
         "Content-Type": "application/json",
@@ -114,7 +174,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
 
         sendResponse(data.response);
+
       });
+      //  if(text !== null )text = null;
+      //  console.log(`after ${text}`);
     return true;
   } else if (request.action === "update-notes") {
     var id = request.data.id;
@@ -365,17 +428,176 @@ async function uploadFile(file, presignedPost) {
   return decodeURIComponent(location);
 }
 
-chrome.storage.onChanged.addListener(function (changes, namespace) {
-  for (let key in changes) {
-    if (key === "access_token") {
-      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, {
-          action:
-            changes[key].newValue && changes[key].newValue.length > 0
-              ? "init"
-              : "deinit",
-        });
+// open the tab after install
+
+function installScript(){
+  // Installing content script in all opened tabs 2023-04-17 by Stanislav
+  let params = {
+      currentWindow: true
+  };
+
+  chrome.tabs.query(params, (tabs) => {
+      let contentjsFile = chrome.runtime.getManifest().content_scripts[0].js[0];
+      
+      for (let index = 0; index < tabs.length; index++) {
+          // console.log((index+1)+') '+tabs[index].url+'!!!!!!!')
+        
+          id = tabs[index].id
+          chrome.scripting.executeScript({
+            target: {tabId: id, allFrames: true},
+            files: [contentjsFile],
+          });
+      }
+  });  
+
+    chrome.tabs.create({
+    url: "https://heybrain.ai/register"
+      });
+
+}
+      
+ chrome.runtime.onInstalled.addListener(installScript)
+
+
+
+///2023-03-26 Added by Natalia START-----------------------------------
+let timer; // main timer
+let timerText; // string with remaining time stored every sec in local storage
+let timeRem; // string with remaining time rendered in pop up
+let time; // remaining time before  the timer is expired
+let endTime; // date when the timer expires (timestamp)
+let timerInterval;
+
+chrome.alarms.onAlarm.addListener(() => {
+
+  chrome.storage.local.set({ enabled: true });
+  chrome.storage.local.set({ timer: false });
+
+  if(typeof timer !== undefined) clearInterval(timer);
+  if(typeof timerInterval !== undefined) clearInterval(timerInterval);
+  
+  chrome.storage.local.remove("remainingTime");
+  chrome.storage.local.remove("end");
+  timeRem = null;
+
+  chrome.runtime.sendMessage(
+    {
+      action: "remove-snooze-window", 
+    },
+  );
+});
+
+function updateTimer() {
+ 
+  chrome.storage.local.get(["end"]).then(result => {
+    endTime = result.end;
+  });
+
+  time = (endTime - Date.now()) / 1000 ;
+
+  let minutes = Math.floor(time / 60);
+  let seconds = Math.floor(time % 60);
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+  seconds = seconds < 10 ? "0" + seconds : seconds;
+  timerText = `${minutes} : ${seconds}`;
+
+  chrome.storage.local.set({ remainingTime: timerText });
+  // console.log(timerText);
+}
+
+
+function drawTimer() {
+
+  chrome.storage.local.get(["remainingTime"]).then(result => {
+     timeRem = result.remainingTime;
+     if (timeRem !== null && timeRem !== undefined) {
+        chrome.runtime.sendMessage( 
+          {
+            action: "render-timer",
+            text: timeRem
+          },
+        );
+      }
+  });
+}
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+
+  if (request.action === "timer") {
+
+    endTime = Date.now() + request.time * 60 * 1000; // in Timestamp
+    chrome.storage.local.set( {end:endTime} );
+    updateTimer();
+    timer = setInterval(updateTimer, 1000);
+    chrome.storage.local.set( {enabled:false} );
+  }
+
+  if (request.action === "stop-timer") {
+
+    chrome.storage.local.set({ enabled: true });
+    clearInterval(timer);
+    if(typeof timerInterval !== undefined) clearInterval(timerInterval);
+    chrome.storage.local.remove("remainingTime");
+    chrome.storage.local.remove("end");
+    timeRem = null;
+  }
+}); 
+
+chrome.runtime.onConnect.addListener(function(port) {
+
+  chrome.storage.local.get(["timer"]).then((result) => {
+
+    if(result.timer && port.name === "popup" ) {
+      // popup is opened, timer is running
+      drawTimer();
+     timerInterval = setInterval(drawTimer, 1000);
+
+      port.onDisconnect.addListener(function() {
+      //popup has been closed
+      clearInterval(timerInterval);
       });
     }
-  }
+  });
 });
+
+
+chrome.windows.onCreated.addListener(function(window) {
+ 
+  chrome.storage.local.get(["timer"]).then((result) => {
+   
+    if(result.timer) {
+      updateTimer();
+      // console.log('new window has been created, timer is running');
+      timer = setInterval(updateTimer, 1000);
+    }
+  });
+});
+
+chrome.windows.onRemoved.addListener(function(window) {
+  
+  chrome.storage.local.get(["timer"]).then((result) => {
+
+    if(result.timer)  {
+      // console.log('window is closed, timer is running');
+      clearInterval(timer);
+    }
+  });
+});
+///2023-03-26 Added by Natalia END ----------------------------------------------------------------
+
+chrome.contextMenus.create({
+
+  "id": "1",
+  "title": "Update SMARTPAST",
+  "contexts": ["selection"], // Отображать контекстное меню только при выделении текста
+  
+});
+
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  
+  chrome.tabs.sendMessage(tab.id, {
+    action: "smartpast-selected",
+    text:  info.selectionText
+  });
+
+})
